@@ -42,7 +42,7 @@ export function AccordionStep({
             <StepIcon name={icon} />
             <h2 className="step-title">{title}</h2>
           </div>
-          <div className="flex items-center gap-2 text-indigo-600 font-medium">
+          <div className="flex items-center gap-2 font-medium" style={{ color: '#4E2FD2' }}>
             {selectedCount > 0 && <span>{selectedCount} selected</span>}
             <ChevronIcon isExpanded={isExpanded} strokeWidth={chevronStrokeWidth} />
           </div>

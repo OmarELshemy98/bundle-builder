@@ -4,10 +4,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Base styles */
 body {
   font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
+/* Step header styles */
 .step-text {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-weight: 500;
@@ -23,10 +25,10 @@ body {
   font-weight: 600;
   font-size: 22px;
   line-height: 100%;
-  letter-spacing: 0px;
   color: #1f1f1f;
 }
 
+/* Review panel styles */
 .review-header {
   font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-weight: 500;
@@ -42,7 +44,6 @@ body {
   font-weight: 600;
   font-size: 22px;
   line-height: 1.15;
-  letter-spacing: 0;
   color: #1f1f1f;
 }
 
@@ -51,7 +52,6 @@ body {
   font-weight: 500;
   font-size: 14px;
   line-height: 1.3;
-  letter-spacing: 0;
   color: rgba(31, 31, 31, 0.78);
 }
 
@@ -71,6 +71,21 @@ body {
   color: #1f1f1f;
 }
 
+.review-block {
+  border-top: 1px solid #c6cede;
+  padding-top: 14px;
+  margin-top: 14px;
+}
+
+.review-empty {
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: rgba(31, 31, 31, 0.65);
+}
+
+/* Price styles */
 .price-main {
   font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-weight: 600;
@@ -110,6 +125,7 @@ body {
   color: #10b981;
 }
 
+/* Buttons and links */
 .checkout-button {
   font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-weight: 600;
@@ -133,35 +149,23 @@ body {
   text-align: center;
 }
 
+/* Badge styles */
 .badge {
   font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-weight: 500;
   font-size: 12px;
   background-color: #4e2fd2;
   color: white;
-  padding: 6px 12px;
-  border-radius: 8px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  line-height: 1;
 }
 
-.review-block {
-  border-top: 1px solid #c6cede;
-  padding-top: 14px;
-  margin-top: 14px;
-}
-
-.review-empty {
-  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1.45;
-  color: rgba(31, 31, 31, 0.65);
-}
-
+/* Responsive styles */
 @media (max-width: 1535px) {
   .price-main {
     font-size: 18px;
   }
-
   .price-total {
     font-size: 34px;
   }
@@ -171,23 +175,18 @@ body {
   .step-title {
     font-size: 32px;
   }
-
   .review-title {
     font-size: 32px;
   }
-
   .review-description {
     font-size: 13px;
   }
-
   .price-total {
     font-size: 30px;
   }
-
   .price-total-strikethrough {
     font-size: 13px;
   }
-
   .badge {
     font-size: 11px;
     padding: 5px 10px;

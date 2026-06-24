@@ -9,7 +9,7 @@ export function ReviewPlanRow({ item }: ReviewPlanRowProps) {
   return (
     <div className="flex items-center justify-between py-1.5">
       <div className="flex items-center gap-3">
-        <ProductImage src={item.product.imageUrl} alt="" className="w-6 h-6" />
+        <ProductImage src={item.product.imageUrl} alt="" className="w-6 h-6 bg-white rounded-md p-0.5" />
         <span className="review-item-name font-semibold" style={{ color: '#4E2FD2' }}>
           {item.product.name}
         </span>

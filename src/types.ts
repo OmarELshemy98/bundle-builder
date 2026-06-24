@@ -2,11 +2,10 @@ export interface ProductVariant {
   id: string;
   name: string;
   imageUrl: string;
-  selected?: boolean;
 }
 
 export interface Product {
-  id: string | number;
+  id: number;
   name: string;
   description?: string;
   price: number;
@@ -16,4 +15,16 @@ export interface Product {
   badge?: string;
   selected?: boolean;
   learnMoreUrl?: string;
+  stepId: number;
+}
+
+export interface CartItemVariant {
+  variantId: string;
+  quantity: number;
+}
+
+export interface CartItem {
+  productId: number;
+  activeVariantId?: string;
+  variants: CartItemVariant[];
 }

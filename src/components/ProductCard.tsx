@@ -1,27 +1,81 @@
 import React from 'react';
-import { Product } from '../types';
+import { Product, CartItem, ProductVariant } from '../types';
 
 interface ProductCardProps {
   product: Product;
-  quantity: number;
-  selectedVariantId?: string;
-  onUpdate: (updates: { quantity?: number; variantId?: string; selected?: boolean }) => void;
+  cartItem: CartItem | undefined;
+  onUpdate: (updates: Partial<CartItem>) => void;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({
   product,
-  quantity,
-  selectedVariantId,
+  cartItem,
   onUpdate,
 }) => {
+  const getTotalQuantity = () => {
+    if (!cartItem) return 0;
+    return cartItem.variants.reduce((total, v) => total + v.quantity, 0);
+  };
+
+  const getActiveVariant = (): ProductVariant | undefined => {
+    if (!cartItem?.activeVariantId && product.variants.length > 0) {
+      return product.variants[0];
+    }
+    return product.variants.find((v) => v.id === cartItem?.activeVariantId);
+  };
+
+  const getActiveVariantQuantity = () => {
+    if (!cartItem) return 0;
+    const activeVariant = getActiveVariant();
+    if (!activeVariant) return cartItem.variants[0]?.quantity || 0;
+    const variantCart = cartItem.variants.find((v) => v.variantId === activeVariant.id);
+    return variantCart?.quantity || 0;
+  };
+
+  const totalQuantity = getTotalQuantity();
+  const activeQuantity = getActiveVariantQuantity();
+
+  const handleVariantChange = (variantId: string) => {
+    onUpdate({ activeVariantId: variantId });
+  };
+
+  const handleQuantityChange = (delta: number) => {
+    if (!cartItem) {
+      const initialVariantId = product.variants.length > 0 ? product.variants[0].id : 'default';
+      onUpdate({
+        productId: product.id,
+        activeVariantId: initialVariantId,
+        variants: [{ variantId: initialVariantId, quantity: Math.max(0, delta) }],
+      });
+      return;
+    }
+
+    const targetVariantId = cartItem.activeVariantId || (product.variants.length > 0 ? product.variants[0].id : 'default');
+    const updatedVariants = [...cartItem.variants];
+    const existingVariantIndex = updatedVariants.findIndex((v) => v.variantId === targetVariantId);
+
+    if (existingVariantIndex >= 0) {
+      updatedVariants[existingVariantIndex] = {
+        ...updatedVariants[existingVariantIndex],
+        quantity: Math.max(0, updatedVariants[existingVariantIndex].quantity + delta),
+      };
+    } else {
+      updatedVariants.push({ variantId: targetVariantId, quantity: Math.max(0, delta) });
+    }
+
+    onUpdate({
+      ...cartItem,
+      variants: updatedVariants,
+    });
+  };
+
   return (
     <div
       className={`relative bg-white rounded-xl p-4 transition-all border-2 ${
-        product.selected
+        totalQuantity > 0
           ? 'border-indigo-600 ring-2 ring-indigo-200'
           : 'border-transparent hover:border-gray-200'
       }`}
-      onClick={() => onUpdate({ selected: !product.selected })}
     >
       {product.badge && (
         <div className="absolute top-3 left-3 bg-indigo-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
@@ -56,18 +110,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             </a>
           )}
 
-          {/* Variants */}
           {product.variants.length > 0 && (
             <div className="flex items-center gap-2 mb-3">
               {product.variants.map((variant) => (
                 <button
                   key={variant.id}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onUpdate({ variantId: variant.id });
-                  }}
+                  onClick={() => handleVariantChange(variant.id)}
                   className={`relative w-10 h-10 rounded border-2 flex items-center justify-center overflow-hidden transition-all bg-white ${
-                    selectedVariantId === variant.id
+                    cartItem?.activeVariantId === variant.id
                       ? 'border-teal-500 ring-1 ring-teal-500'
                       : 'border-gray-300 hover:border-gray-400'
                   }`}
@@ -77,7 +127,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                     alt={variant.name}
                     className="w-full h-full object-cover p-0.5"
                   />
-                  {selectedVariantId === variant.id && (
+                  {cartItem?.activeVariantId === variant.id && (
                     <div className="absolute inset-0 flex items-center justify-center bg-teal-500/30">
                       <svg className="w-5 h-5 text-white drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
@@ -89,14 +139,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             </div>
           )}
 
-          {/* Quantity and Price */}
           <div className="flex items-center justify-between">
             <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onUpdate({ quantity: Math.max(0, quantity - 1) });
-                }}
+                onClick={() => handleQuantityChange(-1)}
                 className="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -104,13 +150,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 </svg>
               </button>
               <span className="w-10 h-8 flex items-center justify-center font-medium text-gray-900">
-                {quantity}
+                {activeQuantity}
               </span>
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onUpdate({ quantity: quantity + 1 });
-                }}
+                onClick={() => handleQuantityChange(1)}
                 className="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

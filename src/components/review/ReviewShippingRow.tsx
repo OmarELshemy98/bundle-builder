@@ -1,5 +1,4 @@
 import { staticItems } from '../../data';
-import { ProductImage } from '../shared/ProductImage';
 
 export function ReviewShippingRow() {
   const { shipping } = staticItems;

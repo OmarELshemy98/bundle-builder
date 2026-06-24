@@ -13,7 +13,7 @@ interface StepHeaderProps {
 }
 
 const stepTextStyle = {
-  fontFamily: 'Gilroy-Medium',
+  fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
   fontWeight: 400,
   fontSize: '12px',
   lineHeight: '100%',
@@ -24,7 +24,7 @@ const stepTextStyle = {
 };
 
 const titleStyle = {
-  fontFamily: 'Gilroy-SemiBold',
+  fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
   fontWeight: 400,
   fontSize: '22px',
   lineHeight: '100%',

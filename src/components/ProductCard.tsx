@@ -1,5 +1,5 @@
 import React from 'react';
-import { Product, CartItem, ProductVariant } from '../types';
+import { Product, CartItem } from '../types';
 
 interface ProductCardProps {
   product: Product;
@@ -12,12 +12,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   cartItem,
   onUpdate,
 }) => {
-  const getTotalQuantity = () => {
-    if (!cartItem) return 0;
-    return cartItem.variants.reduce((total, v) => total + v.quantity, 0);
-  };
+  const totalQuantity = cartItem ? cartItem.variants.reduce((sum, v) => sum + v.quantity, 0) : 0;
+  const isSelected = totalQuantity > 0;
 
-  const getActiveVariant = (): ProductVariant | undefined => {
+  const getActiveVariant = () => {
     if (!cartItem?.activeVariantId && product.variants.length > 0) {
       return product.variants[0];
     }
@@ -32,8 +30,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     return variantCart?.quantity || 0;
   };
 
-  const totalQuantity = getTotalQuantity();
+  const getSavePercentage = () => {
+    if (product.price === 0 && product.compareAtPrice && product.compareAtPrice > 0) return 100; // For FREE items
+    if (!product.compareAtPrice || product.compareAtPrice <= product.price) return 0;
+    return Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100);
+  };
+
   const activeQuantity = getActiveVariantQuantity();
+  const savePercentage = getSavePercentage();
 
   const handleVariantChange = (variantId: string) => {
     onUpdate({ activeVariantId: variantId });
@@ -71,20 +75,29 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <div
-      className={`relative bg-white rounded-xl p-4 transition-all border-2 ${
-        totalQuantity > 0
-          ? 'border-indigo-600 ring-2 ring-indigo-200'
-          : 'border-transparent hover:border-gray-200'
-      }`}
+      className="flex flex-col bg-white rounded-xl p-4 transition-all border-2"
+      style={{ borderColor: isSelected ? '#4E2FD2B2' : 'transparent' }}
     >
-      {product.badge && (
-        <div className="absolute top-3 left-3 bg-indigo-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
-          {product.badge}
+      {savePercentage > 0 && (
+        <div
+          className="self-start px-4 py-2 rounded-full mb-3"
+          style={{
+            backgroundColor: '#4E2FD2',
+            color: 'white',
+            fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+            fontWeight: 600,
+            fontSize: '14px',
+            lineHeight: '100%',
+            letterSpacing: '0px',
+            textAlign: 'center'
+          }}
+        >
+          {savePercentage === 100 ? 'FREE' : `Save ${savePercentage}%`}
         </div>
       )}
 
-      <div className="flex flex-col md:flex-row gap-4">
-        <div className="flex-shrink-0 w-full md:w-28 aspect-square bg-white rounded-xl overflow-hidden flex items-center justify-center">
+      <div className="flex gap-4">
+        <div className="flex-shrink-0 w-32 aspect-square bg-white rounded-xl overflow-hidden flex items-center justify-center">
           <img
             src={product.imageUrl}
             alt={product.name}
@@ -92,81 +105,166 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           />
         </div>
 
-        <div className="flex-1">
-          <h3 className="text-lg font-semibold text-gray-900 mb-1">{product.name}</h3>
+        <div className="flex-1 flex flex-col gap-2">
+          <h3
+            style={{
+              color: '#1F1F1F',
+              fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+              fontWeight: '600',
+              fontSize: '16px',
+              lineHeight: '100%',
+              letterSpacing: '0.6px',
+              verticalAlign: 'middle',
+              margin: '0'
+            }}
+          >
+            {product.name}
+          </h3>
+
           {product.description && (
-            <p className="text-sm text-gray-600 mb-2">{product.description}</p>
+            <p
+              style={{
+                color: '#1F1F1FBF',
+                fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                fontWeight: '500',
+                fontSize: '12px',
+                lineHeight: '130%',
+                letterSpacing: '0.6px',
+                verticalAlign: 'middle',
+                margin: '0'
+              }}
+            >
+              {product.description}
+            </p>
           )}
-          
+
           {product.learnMoreUrl && (
-            <a 
-              href={product.learnMoreUrl} 
-              target="_blank" 
+            <a
+              href={product.learnMoreUrl}
+              target="_blank"
               rel="noreferrer"
-              className="text-sm text-indigo-600 font-medium underline mb-3 inline-block"
+              style={{
+                color: '#0000EE',
+                fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                fontWeight: '500',
+                fontSize: '12px',
+                lineHeight: '100%',
+                letterSpacing: '0.6px',
+                verticalAlign: 'middle',
+                textDecoration: 'underline',
+                cursor: 'pointer'
+              }}
               onClick={(e) => e.stopPropagation()}
             >
               Learn More
             </a>
           )}
 
-          {product.variants.length > 0 && (
-            <div className="flex items-center gap-2 mb-3">
+          {product.variants.length > 0 ? (
+            <div className="flex items-center gap-2">
               {product.variants.map((variant) => (
                 <button
                   key={variant.id}
                   onClick={() => handleVariantChange(variant.id)}
-                  className={`relative w-10 h-10 rounded border-2 flex items-center justify-center overflow-hidden transition-all bg-white ${
+                  className={`flex items-center gap-1.5 px-2 py-1 rounded border-2 transition-all bg-white ${
                     cartItem?.activeVariantId === variant.id
                       ? 'border-teal-500 ring-1 ring-teal-500'
                       : 'border-gray-300 hover:border-gray-400'
                   }`}
                 >
-                  <img
-                    src={variant.imageUrl}
-                    alt={variant.name}
-                    className="w-full h-full object-cover p-0.5"
-                  />
-                  {cartItem?.activeVariantId === variant.id && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-teal-500/30">
-                      <svg className="w-5 h-5 text-white drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                  )}
+                  <div className="w-6 h-6 rounded overflow-hidden flex items-center justify-center">
+                    <img
+                      src={variant.imageUrl}
+                      alt={variant.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <span
+                    style={{
+                      fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                      fontWeight: '500',
+                      fontSize: '10px',
+                      lineHeight: '100%',
+                      letterSpacing: '0.6px',
+                      verticalAlign: 'middle'
+                    }}
+                  >
+                    {variant.name}
+                  </span>
                 </button>
               ))}
             </div>
+          ) : (
+            // Empty div to maintain spacing
+            <div className="h-6" />
           )}
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
-              <button
-                onClick={() => handleQuantityChange(-1)}
-                className="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M20 12H4" />
-                </svg>
-              </button>
-              <span className="w-10 h-8 flex items-center justify-center font-medium text-gray-900">
-                {activeQuantity}
-              </span>
-              <button
-                onClick={() => handleQuantityChange(1)}
-                className="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
-                </svg>
-              </button>
-            </div>
+          <div className="flex items-center justify-between mt-auto">
+            {product.isMonthly ? (
+              <div className="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  checked={activeQuantity > 0}
+                  onChange={(e) => handleQuantityChange(e.target.checked ? 1 - activeQuantity : -activeQuantity)}
+                  className="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                />
+                <span
+                  style={{
+                    color: '#1F1F1F',
+                    fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                    fontWeight: '500',
+                    fontSize: '14px',
+                    lineHeight: '100%'
+                  }}
+                >
+                  Select Plan
+                </span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => handleQuantityChange(-1)}
+                  className="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors border border-gray-300 rounded"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M20 12H4" />
+                  </svg>
+                </button>
+                <span className="w-8 h-8 flex items-center justify-center font-medium text-gray-900 border-y border-gray-300">
+                  {activeQuantity}
+                </span>
+                <button
+                  onClick={() => handleQuantityChange(1)}
+                  className="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors border border-gray-300 rounded"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
+                  </svg>
+                </button>
+              </div>
+            )}
 
-            <div className="flex items-baseline gap-2">
-              <span className="text-lg font-bold text-red-500">${product.price.toFixed(2)}</span>
-              {product.compareAtPrice && (
-                <span className="text-sm text-gray-500 line-through">
-                  ${product.compareAtPrice.toFixed(2)}
+            <div className="flex flex-col items-end gap-1">
+              <span
+                style={{
+                  color: '#D8392B',
+                  fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                  fontSize: '18px',
+                  fontWeight: '600'
+                }}
+              >
+                {product.price === 0 ? 'FREE' : `$${product.price.toFixed(2)}${product.isMonthly ? '/mo' : ''}`}
+              </span>
+              {product.compareAtPrice && product.compareAtPrice > product.price && (
+                <span
+                  style={{
+                    color: '#575757',
+                    fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                    fontSize: '14px',
+                    textDecoration: 'line-through'
+                  }}
+                >
+                  ${product.compareAtPrice.toFixed(2)}${product.isMonthly ? '/mo' : ''}
                 </span>
               )}
             </div>

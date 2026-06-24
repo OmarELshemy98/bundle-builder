@@ -16,6 +16,7 @@ export interface Product {
   selected?: boolean;
   learnMoreUrl?: string;
   stepId: number;
+  isMonthly?: boolean;
 }
 
 export interface CartItemVariant {

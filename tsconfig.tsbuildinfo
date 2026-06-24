@@ -1,1 +1,1 @@
-{"root":["./src/app.tsx","./src/data.ts","./src/main.tsx","./src/types.ts","./src/vite-env.d.ts","./src/components/productcard.tsx"],"version":"5.7.3"}
+{"root":["./src/app.tsx","./src/data.ts","./src/main.tsx","./src/types.ts","./src/vite-env.d.ts","./src/components/productcard.tsx","./src/components/quantitystepper.tsx","./src/components/reviewitem.tsx","./src/components/stepheader.tsx"],"version":"5.7.3"}

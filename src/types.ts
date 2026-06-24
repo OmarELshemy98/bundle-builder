@@ -29,3 +29,13 @@ export interface CartItem {
   activeVariantId?: string;
   variants: CartItemVariant[];
 }
+
+export type ReviewCategory = 'cameras' | 'sensors' | 'plan' | 'accessories';
+
+export interface SelectedReviewItem {
+  id: string;
+  product: Product;
+  variant?: ProductVariant;
+  quantity: number;
+  category: ReviewCategory;
+}

@@ -1,4 +1,4 @@
-import { Product } from './types';
+import { Product } from '../types';
 
 export const products: Product[] = [
   {
@@ -127,11 +127,4 @@ export const products: Product[] = [
     learnMoreUrl: '#',
     stepId: 4,
   },
-];
-
-export const steps = [
-  { id: 1, title: 'Choose your cameras', icon: 'camera' },
-  { id: 2, title: 'Choose your plan', icon: 'shield' },
-  { id: 3, title: 'Choose your sensors', icon: 'sensor' },
-  { id: 4, title: 'Add extra protection', icon: 'extra' },
 ];

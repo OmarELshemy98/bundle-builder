@@ -1,6 +1,12 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
 
 .step-text {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -22,7 +28,7 @@
 }
 
 .review-header {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-weight: 500;
   font-size: 12px;
   line-height: 100%;
@@ -32,7 +38,7 @@
 }
 
 .review-title {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-weight: 600;
   font-size: 22px;
   line-height: 100%;
@@ -41,7 +47,7 @@
 }
 
 .review-description {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-weight: 500;
   font-size: 14px;
   line-height: 130%;
@@ -50,7 +56,7 @@
 }
 
 .review-section-header {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-weight: 500;
   font-size: 12px;
   text-transform: uppercase;
@@ -59,21 +65,21 @@
 }
 
 .review-item-name {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-weight: 500;
   font-size: 14px;
   color: #1f1f1f;
 }
 
 .price-main {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-weight: 600;
   font-size: 18px;
   color: #d8392b;
 }
 
 .price-strikethrough {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-weight: 600;
   font-size: 14px;
   color: #575757;
@@ -81,14 +87,14 @@
 }
 
 .price-total {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-weight: 600;
   font-size: 24px;
   color: #d8392b;
 }
 
 .price-total-strikethrough {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-weight: 500;
   font-size: 16px;
   color: #575757;
@@ -96,14 +102,14 @@
 }
 
 .savings-text {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-weight: 600;
   font-size: 12px;
   color: #10b981;
 }
 
 .checkout-button {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-weight: 600;
   font-size: 16px;
   background-color: #4e2fd2;
@@ -116,7 +122,7 @@
 }
 
 .save-system-link {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-weight: 500;
   font-size: 12px;
   color: #484848;
@@ -126,11 +132,25 @@
 }
 
 .badge {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-weight: 500;
   font-size: 12px;
   background-color: #4e2fd2;
   color: white;
   padding: 6px 12px;
   border-radius: 8px;
+}
+
+.review-block {
+  border-top: 0.5px solid #cfd8e9;
+  padding-top: 10px;
+  margin-top: 10px;
+}
+
+.review-empty {
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: rgba(31, 31, 31, 0.65);
 }

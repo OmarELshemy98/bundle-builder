@@ -4,46 +4,12 @@ import { ProductCard } from './components/ProductCard';
 import { ReviewItem } from './components/ReviewItem';
 import { products } from './data';
 
-const STORAGE_KEY = 'wyze-bundle-builder';
+const STORAGE_KEY = 'wyze-bundle-builder-v2';
 
-const initialCart: CartItem[] = [
-  {
-    productId: 9,
-    activeVariantId: undefined,
-    variants: [{ variantId: 'default', quantity: 1 }],
-  },
-  {
-    productId: 1,
-    activeVariantId: 'white',
-    variants: [{ variantId: 'white', quantity: 1 }],
-  },
-  {
-    productId: 2,
-    activeVariantId: 'white',
-    variants: [{ variantId: 'white', quantity: 2 }],
-  },
-  {
-    productId: 6,
-    activeVariantId: 'white',
-    variants: [{ variantId: 'white', quantity: 2 }],
-  },
-  {
-    productId: 7,
-    activeVariantId: 'white',
-    variants: [{ variantId: 'white', quantity: 1 }],
-  },
-  {
-    productId: 8,
-    activeVariantId: undefined,
-    variants: [{ variantId: 'default', quantity: 1 }],
-  },
-];
+const initialCart: CartItem[] = [];
 
 const staticItems = {
-  accessories: [
-    { id: 'sd-card-256', name: 'Wyze MicroSD Card (256GB)', price: 41.96, quantity: 2, thumbnail: '' },
-  ],
-  shipping: { name: 'Fast Shipping', price: 0, compareAtPrice: 5.99, thumbnail: '/assets/images/icons/fast-shipping.svg' },
+  shipping: { name: 'Fast Shipping', price: 0, compareAtPrice: 5.99, thumbnail: '/images/icons/fast-shipping.svg' },
 };
 
 function App() {
@@ -95,7 +61,7 @@ function App() {
       product: Product;
       variant?: ProductVariant;
       quantity: number;
-      category: 'cameras' | 'sensors' | 'plan';
+      category: 'cameras' | 'sensors' | 'plan' | 'accessories';
     }> = [];
 
     cart.forEach(cartItem => {
@@ -109,7 +75,14 @@ function App() {
             product,
             variant,
             quantity: variantCart.quantity,
-            category: product.stepId === 1 ? 'cameras' : product.stepId === 2 ? 'plan' : 'sensors'
+            category:
+              product.stepId === 1
+                ? 'cameras'
+                : product.stepId === 2
+                  ? 'plan'
+                  : product.stepId === 3
+                    ? 'sensors'
+                    : 'accessories'
           });
         }
       });
@@ -127,17 +100,18 @@ function App() {
       compare += (item.product.compareAtPrice || item.product.price) * item.quantity;
     });
 
-    staticItems.accessories.forEach(item => {
-      sub += item.price;
-      compare += item.price;
-    });
-
     return {
       subtotal: sub,
       compareAtSubtotal: compare,
       savings: compare - sub
     };
   }, [selectedItems]);
+
+  const cameraItems = selectedItems.filter(item => item.category === 'cameras');
+  const sensorItems = selectedItems.filter(item => item.category === 'sensors');
+  const planItems = selectedItems.filter(item => item.category === 'plan');
+  const accessoryItems = selectedItems.filter(item => item.category === 'accessories');
+  const hasSelectedItems = selectedItems.length > 0;
 
   const step1Products = getProductsByStep(1);
 
@@ -148,10 +122,10 @@ function App() {
   return (
     <div className="min-h-screen bg-white py-8 px-4">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col lg:flex-row gap-6">
+          <div className="flex flex-col lg:flex-row gap-6">
           <div className="flex-1">
             {/* Step 1 */}
-            <div className="bg-[#EDF4FF] rounded-t-xl p-6">
+            <div className={`${expandedStepId === 1 ? 'bg-[#EDF4FF]' : 'bg-white'} rounded-t-xl p-6`}>
               <div
                 className="mb-4 pb-4 step-text"
                 style={{ borderBottom: '0.5px solid #1F1F1F' }}
@@ -180,12 +154,14 @@ function App() {
                   </svg>
                   <h2 className="step-title">Choose your cameras</h2>
                 </div>
-                <div className="flex items-center gap-2 text-indigo-600 font-medium">
-                  <span>{getSelectedCount(1)} selected</span>
-                  <svg className={`w-5 h-5 transition-transform ${expandedStepId === 1 ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
+                {getSelectedCount(1) > 0 && (
+                  <div className="flex items-center gap-2 text-indigo-600 font-medium">
+                    <span>{getSelectedCount(1)} selected</span>
+                    <svg className={`w-5 h-5 transition-transform ${expandedStepId === 1 ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                )}
               </div>
 
               {expandedStepId === 1 && (
@@ -222,7 +198,7 @@ function App() {
             </div>
 
             {/* Step 2 */}
-            <div className="bg-white">
+            <div className={expandedStepId === 2 ? 'bg-[#EDF4FF]' : 'bg-white'}>
               <div className="px-6 py-5">
                 <div
                   className="mb-4 py-4 step-text"
@@ -264,7 +240,7 @@ function App() {
             </div>
 
             {/* Step 3 */}
-            <div className="bg-white">
+            <div className={expandedStepId === 3 ? 'bg-[#EDF4FF]' : 'bg-white'}>
               <div className="px-6 py-5">
                 <div
                   className="mb-4 py-4 step-text"
@@ -287,12 +263,14 @@ function App() {
                     </svg>
                     <h2 className="step-title">Choose your sensors</h2>
                   </div>
-                  <div className="flex items-center gap-2 text-indigo-600 font-medium">
-                    <span>{getSelectedCount(3)} selected</span>
-                    <svg className={`w-5 h-5 transition-transform ${expandedStepId === 3 ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </div>
+                  {getSelectedCount(3) > 0 && (
+                    <div className="flex items-center gap-2 text-indigo-600 font-medium">
+                      <span>{getSelectedCount(3)} selected</span>
+                      <svg className={`w-5 h-5 transition-transform ${expandedStepId === 3 ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
+                  )}
                 </div>
 
                 {expandedStepId === 3 && (
@@ -311,7 +289,7 @@ function App() {
             </div>
 
             {/* Step 4 */}
-            <div className="bg-white">
+            <div className={expandedStepId === 4 ? 'bg-[#EDF4FF]' : 'bg-white'}>
               <div className="px-6 py-5">
                 <div
                   className="mb-4 py-4 step-text"
@@ -338,12 +316,14 @@ function App() {
                     </svg>
                     <h2 className="step-title">Add extra protection</h2>
                   </div>
-                  <div className="flex items-center gap-2 text-indigo-600 font-medium">
-                    <span>{getSelectedCount(4)} selected</span>
-                    <svg className={`w-5 h-5 transition-transform ${expandedStepId === 4 ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </div>
+                  {getSelectedCount(4) > 0 && (
+                    <div className="flex items-center gap-2 text-indigo-600 font-medium">
+                      <span>{getSelectedCount(4)} selected</span>
+                      <svg className={`w-5 h-5 transition-transform ${expandedStepId === 4 ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
+                  )}
                 </div>
 
                 {expandedStepId === 4 && (
@@ -376,112 +356,124 @@ function App() {
               </div>
 
               <div className="px-5 pb-5">
-                <div className="review-section-header mb-3">Cameras</div>
-                {selectedItems.filter(item => item.category === 'cameras').map(item => (
-                  <ReviewItem
-                    key={item.id}
-                    item={item}
-                    cart={cart}
-                    handleProductUpdate={handleProductUpdate}
-                  />
-                ))}
-
-                <div className="review-section-header mt-4 mb-3">Sensors</div>
-                {selectedItems.filter(item => item.category === 'sensors').map(item => (
-                  <ReviewItem
-                    key={item.id}
-                    item={item}
-                    cart={cart}
-                    handleProductUpdate={handleProductUpdate}
-                  />
-                ))}
-
-                <div className="review-section-header mt-4 mb-3">Plan</div>
-                {selectedItems.filter(item => item.category === 'plan').map(item => (
-                  <div key={item.id} className="flex items-center justify-between py-1.5">
-                    <div className="flex items-center gap-3">
-                      <img src={item.product.imageUrl} alt="" className="w-9 h-9" />
-                      <span className="review-item-name font-semibold" style={{ color: '#4E2FD2' }}>
-                        {item.product.name}
-                      </span>
-                    </div>
-                    <div className="text-right">
-                      {item.product.compareAtPrice && item.product.compareAtPrice > item.product.price && (
-                        <div className="price-strikethrough">${item.product.compareAtPrice.toFixed(2)}/mo</div>
-                      )}
-                      <div className="price-main">${item.product.price.toFixed(2)}/mo</div>
-                    </div>
+                {!hasSelectedItems && (
+                  <div className="py-10 text-center review-empty">
+                    Your review is empty. Start adding products to build your security bundle.
                   </div>
-                ))}
+                )}
 
-                <div className="review-section-header mt-4 mb-3">Accessories</div>
-                {staticItems.accessories.map(item => (
-                  <div key={item.id} className="flex items-center justify-between py-1.5">
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 bg-white rounded overflow-hidden flex items-center justify-center p-0.5" />
-                      <span className="review-item-name">{item.name}</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-1">
-                        <button className="w-7 h-7 flex items-center justify-center text-gray-600 bg-white border border-gray-300 rounded">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 12H4" />
-                          </svg>
-                        </button>
-                        <span className="w-7 h-7 flex items-center justify-center text-sm font-medium">{item.quantity}</span>
-                        <button className="w-7 h-7 flex items-center justify-center text-gray-600 bg-white border border-gray-300 rounded">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-                          </svg>
-                        </button>
+                {cameraItems.length > 0 && (
+                  <div className="review-block">
+                    <div className="review-section-header mb-2">Cameras</div>
+                    {cameraItems.map(item => (
+                      <ReviewItem
+                        key={item.id}
+                        item={item}
+                        cart={cart}
+                        handleProductUpdate={handleProductUpdate}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {sensorItems.length > 0 && (
+                  <div className="review-block">
+                    <div className="review-section-header mb-2">Sensors</div>
+                    {sensorItems.map(item => (
+                      <ReviewItem
+                        key={item.id}
+                        item={item}
+                        cart={cart}
+                        handleProductUpdate={handleProductUpdate}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {accessoryItems.length > 0 && (
+                  <div className="review-block">
+                    <div className="review-section-header mb-2">Accessories</div>
+                    {accessoryItems.map(item => (
+                      <ReviewItem
+                        key={item.id}
+                        item={item}
+                        cart={cart}
+                        handleProductUpdate={handleProductUpdate}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {planItems.length > 0 && (
+                  <div className="review-block">
+                    <div className="review-section-header mb-2">Plan</div>
+                    {planItems.map(item => (
+                      <div key={item.id} className="flex items-center justify-between py-1.5">
+                        <div className="flex items-center gap-3">
+                          <img src={item.product.imageUrl} alt="" className="w-6 h-6" />
+                          <span className="review-item-name font-semibold" style={{ color: '#4E2FD2' }}>
+                            {item.product.name}
+                          </span>
+                        </div>
+                        <div className="text-right">
+                          {item.product.compareAtPrice && item.product.compareAtPrice > item.product.price && (
+                            <div className="price-strikethrough">${item.product.compareAtPrice.toFixed(2)}/mo</div>
+                          )}
+                          <div className="price-main">${item.product.price.toFixed(2)}/mo</div>
+                        </div>
                       </div>
-                      <div className="text-right">
-                        <div className="price-main">${item.price.toFixed(2)}</div>
-                      </div>
-                    </div>
+                    ))}
                   </div>
-                ))}
+                )}
 
-                <div className="flex items-center justify-between py-1.5 mt-4">
-                  <div className="flex items-center gap-3">
-                    <img src={staticItems.shipping.thumbnail} alt="" className="w-9 h-9" />
-                    <span className="review-item-name">{staticItems.shipping.name}</span>
-                  </div>
-                  <div className="text-right">
-                    <div className="price-strikethrough">${staticItems.shipping.compareAtPrice.toFixed(2)}</div>
-                    <div className="price-main" style={{ color: '#4E2FD2' }}>
-                      {staticItems.shipping.price === 0 ? 'FREE' : `$${staticItems.shipping.price.toFixed(2)}`}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-6 flex items-end justify-between">
-                  <img
-                    src="/assets/images/icons/satisfaction-badge.jpg"
-                    alt="100% Satisfaction Badge"
-                    className="w-24 h-24"
-                    style={{ transform: 'rotate(-10deg)' }}
-                  />
-                  <div className="flex-1 ml-4">
-                    <div className="flex items-end justify-between mb-2">
-                      <div className="badge">as low as $19.19/mo</div>
-                      <div className="flex items-baseline gap-2">
-                        <span className="price-total-strikethrough">${compareAtSubtotal.toFixed(2)}</span>
-                        <span className="price-total">${subtotal.toFixed(2)}</span>
+                {hasSelectedItems && (
+                  <>
+                    <div className="review-block">
+                      <div className="flex items-center justify-between py-1.5">
+                        <div className="flex items-center gap-3">
+                          <img src={staticItems.shipping.thumbnail} alt="" className="w-9 h-9" />
+                          <span className="review-item-name">{staticItems.shipping.name}</span>
+                        </div>
+                        <div className="text-right">
+                          <div className="price-strikethrough">${staticItems.shipping.compareAtPrice.toFixed(2)}</div>
+                          <div className="price-main" style={{ color: '#4E2FD2' }}>
+                            {staticItems.shipping.price === 0 ? 'FREE' : `$${staticItems.shipping.price.toFixed(2)}`}
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <div className="savings-text text-center mb-3">
-                      Congrats! You're saving ${savings.toFixed(2)} on your security bundle!
+
+                    <div className="mt-4 flex items-end justify-between">
+                      <img
+                        src="/images/icons/satisfaction-badge.jpg"
+                        alt="100% Satisfaction Badge"
+                        className="w-20 h-20"
+                        style={{ transform: 'rotate(-10deg)' }}
+                      />
+                      <div className="flex-1 ml-3">
+                        <div className="flex items-end justify-between mb-2">
+                          <div className="badge">as low as $19.19/mo</div>
+                          <div className="flex items-baseline gap-2">
+                            {compareAtSubtotal > subtotal && (
+                              <span className="price-total-strikethrough">${compareAtSubtotal.toFixed(2)}</span>
+                            )}
+                            <span className="price-total">${subtotal.toFixed(2)}</span>
+                          </div>
+                        </div>
+                        <div className="savings-text text-center mb-3">
+                          Congrats! You're saving ${Math.max(0, savings).toFixed(2)} on your security bundle!
+                        </div>
+                        <button className="checkout-button">Checkout</button>
+                        <div
+                          className="save-system-link text-center mt-3"
+                          onClick={() => alert('System saved to localStorage!')}
+                        >
+                          Save my system for later
+                        </div>
+                      </div>
                     </div>
-                    <button className="checkout-button">Checkout</button>
-                    <div
-                      className="save-system-link text-center mt-3"
-                      onClick={() => alert('System saved to localStorage!')}
-                    >
-                      Save my system for later
-                    </div>
-                  </div>
-                </div>
+                  </>
+                )}
               </div>
             </div>
           </div>

@@ -217,7 +217,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                     lineHeight: '100%'
                   }}
                 >
-                  Select Plan
+                  {product.name}
                 </span>
               </div>
             ) : (

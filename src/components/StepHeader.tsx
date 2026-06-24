@@ -66,7 +66,7 @@ export const StepHeader: React.FC<StepHeaderProps> = ({
           <h2 style={titleStyle}>{title}</h2>
         </div>
         <div className="flex items-center gap-2">
-          {selectedCount !== undefined && selectedCount >= 0 && (
+          {selectedCount !== undefined && selectedCount > 0 && (
             <span className="text-indigo-600 font-medium">{selectedCount} selected</span>
           )}
           {badgeText && (

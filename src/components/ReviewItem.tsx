@@ -7,7 +7,7 @@ interface ReviewItemProps {
     product: Product;
     variant?: ProductVariant;
     quantity: number;
-    category: 'cameras' | 'sensors' | 'plan';
+    category: string;
   };
   cart: any[]; // Adjust type as needed
   handleProductUpdate: (productId: number, updates: any) => void;
@@ -21,7 +21,7 @@ export const ReviewItem: React.FC<ReviewItemProps> = ({
         <div className="w-9 h-9 bg-white rounded overflow-hidden flex items-center justify-center p-0.5">
           <img src={item.product.imageUrl} alt={item.product.name} className="w-full h-full object-contain" />
         </div>
-        <span className="font-medium text-sm" style={{ color: '#1F1F1F', fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+        <span className="font-medium text-sm" style={{ color: '#1F1F1F', fontFamily: '"Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
           {item.product.name}
           {item.variant && ` (${item.variant.name})`}
         </span>
@@ -62,11 +62,11 @@ export const ReviewItem: React.FC<ReviewItemProps> = ({
         </div>
         <div className="text-right">
           {item.product.compareAtPrice && item.product.compareAtPrice > item.product.price && (
-            <div className="text-sm" style={{ color: '#575757', textDecoration: 'line-through', fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+            <div className="text-sm" style={{ color: '#575757', textDecoration: 'line-through', fontFamily: '"Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
               ${(item.product.compareAtPrice * item.quantity).toFixed(2)}
             </div>
           )}
-          <div className="text-lg font-bold" style={{ color: '#D8392B', fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+          <div className="text-lg font-bold" style={{ color: '#D8392B', fontFamily: '"Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
             {item.product.price === 0 ? 'FREE' : `$${(item.product.price * item.quantity).toFixed(2)}`}
           </div>
         </div>

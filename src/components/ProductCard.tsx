@@ -75,18 +75,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <div
-      className="flex flex-col bg-white rounded-xl p-4 transition-all border-2"
+      className="flex flex-col bg-white rounded-xl p-3 sm:p-4 transition-all border-2"
       style={{ borderColor: isSelected ? '#4E2FD2B2' : 'transparent' }}
     >
       {savePercentage > 0 && (
         <div
-          className="self-start px-4 py-2 rounded-full mb-3"
+          className="self-start px-3 py-1.5 sm:px-4 sm:py-2 rounded-full mb-3"
           style={{
             backgroundColor: '#4E2FD2',
             color: 'white',
             fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
             fontWeight: 600,
-            fontSize: '14px',
+              fontSize: '12px',
             lineHeight: '100%',
             letterSpacing: '0px',
             textAlign: 'center'
@@ -96,12 +96,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         </div>
       )}
 
-      <div className="flex gap-4">
-        <div className="flex-shrink-0 w-32 aspect-square bg-white rounded-xl overflow-hidden flex items-center justify-center">
+      <div className="flex flex-row gap-3 sm:gap-4">
+        <div className="flex-shrink-0 w-24 h-24 sm:w-32 sm:h-32 xl:w-36 xl:h-36 bg-white rounded-xl overflow-hidden flex items-center justify-center">
           <img
             src={product.imageUrl}
             alt={product.name}
-            className="w-full h-full object-contain"
+            className="w-full h-full object-contain scale-110"
           />
         </div>
 
@@ -111,7 +111,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               color: '#1F1F1F',
               fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
               fontWeight: '600',
-              fontSize: '16px',
+              fontSize: '15px',
               lineHeight: '100%',
               letterSpacing: '0.6px',
               verticalAlign: 'middle',
@@ -127,7 +127,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 color: '#1F1F1FBF',
                 fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
                 fontWeight: '500',
-                fontSize: '12px',
+                fontSize: '11px',
                 lineHeight: '130%',
                 letterSpacing: '0.6px',
                 verticalAlign: 'middle',
@@ -147,7 +147,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 color: '#0000EE',
                 fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
                 fontWeight: '500',
-                fontSize: '12px',
+                fontSize: '11px',
                 lineHeight: '100%',
                 letterSpacing: '0.6px',
                 verticalAlign: 'middle',
@@ -161,7 +161,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           )}
 
           {product.variants.length > 0 ? (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               {product.variants.map((variant) => (
                 <button
                   key={variant.id}
@@ -199,7 +199,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             <div className="h-6" />
           )}
 
-          <div className="flex items-center justify-between mt-auto">
+          <div className="flex items-center justify-between mt-auto gap-2">
             {product.isMonthly ? (
               <div className="flex items-center gap-3">
                 <input
@@ -224,18 +224,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               <div className="flex items-center gap-1">
                 <button
                   onClick={() => handleQuantityChange(-1)}
-                  className="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors border border-gray-300 rounded"
+                  className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors border border-gray-300 rounded"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M20 12H4" />
                   </svg>
                 </button>
-                <span className="w-8 h-8 flex items-center justify-center font-medium text-gray-900 border-y border-gray-300">
+                <span className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center font-medium text-gray-900 border-y border-gray-300">
                   {activeQuantity}
                 </span>
                 <button
                   onClick={() => handleQuantityChange(1)}
-                  className="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors border border-gray-300 rounded"
+                  className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors border border-gray-300 rounded"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
@@ -244,12 +244,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               </div>
             )}
 
-            <div className="flex flex-col items-end gap-1">
+            <div className="flex flex-col items-end gap-1 shrink-0">
               <span
                 style={{
                   color: '#D8392B',
                   fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-                  fontSize: '18px',
+                  fontSize: '16px',
                   fontWeight: '600'
                 }}
               >
@@ -260,7 +260,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                   style={{
                     color: '#575757',
                     fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-                    fontSize: '14px',
+                    fontSize: '12px',
                     textDecoration: 'line-through'
                   }}
                 >
